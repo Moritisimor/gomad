@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func ParseSymbol(left []byte) (string, []byte, error) {
+func parseSymbol(left []byte) (string, []byte, error) {
 	acc := strings.Builder{}
 	wasEnded := false
 	steps := 0

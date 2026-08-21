@@ -8,7 +8,6 @@ import (
 	"github.com/Moritisimor/gomad/parser"
 )
 
-
 func main() {
 	tokens, err := lexer.Tokenize("((+ 1 2) (* \"hello \" 4) (/ 10 50)) (hi)")
 	if err != nil {

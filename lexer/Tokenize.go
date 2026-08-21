@@ -13,7 +13,7 @@ func isNumeric(i byte) bool {
 }
 
 func isWhiteSpace(i byte) bool {
-	return i == ' ' || i == '\n' || i == '\t'	
+	return i == ' ' || i == '\n' || i == '\t'
 }
 
 func isTerminator(i byte) bool {
@@ -48,19 +48,19 @@ func Tokenize(source_code string) ([]Token, error) {
 			continue
 		}
 
-		if bytes.HasPrefix(left, []byte{ 't', 'r', 'u', 'e' }) {
-			acc = append(acc, BOOLLIT{ true })
+		if bytes.HasPrefix(left, []byte{'t', 'r', 'u', 'e'}) {
+			acc = append(acc, BOOLLIT{true})
 			left = left[4:]
 			continue
 		}
 
-		if bytes.HasPrefix(left, []byte{ 'f', 'a', 'l', 's', 'e' }) {
-			acc = append(acc, BOOLLIT{ false })
+		if bytes.HasPrefix(left, []byte{'f', 'a', 'l', 's', 'e'}) {
+			acc = append(acc, BOOLLIT{false})
 			left = left[5:]
 			continue
 		}
 
-		if bytes.HasPrefix(left, []byte{ 'u', 'n', 'i', 't' }) {
+		if bytes.HasPrefix(left, []byte{'u', 'n', 'i', 't'}) {
 			acc = append(acc, UNITLIT{})
 			left = left[4:]
 			continue
@@ -84,7 +84,7 @@ func Tokenize(source_code string) ([]Token, error) {
 				return acc, err
 			}
 
-			acc = append(acc, STRINGLIT{ parsedString })
+			acc = append(acc, STRINGLIT{parsedString})
 			left = after
 			continue
 		}
@@ -95,17 +95,17 @@ func Tokenize(source_code string) ([]Token, error) {
 				return acc, err
 			}
 
-			acc = append(acc, NUMLIT{ parsedNumber })
+			acc = append(acc, NUMLIT{parsedNumber})
 			left = after
 			continue
 		}
 
-		symbol, after, err := ParseSymbol(left)
+		symbol, after, err := parseSymbol(left)
 		if err != nil {
 			return acc, err
 		}
 
-		acc = append(acc, SYMBOL{ symbol })
+		acc = append(acc, SYMBOL{symbol})
 		left = after
 	}
 
