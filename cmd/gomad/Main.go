@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/Moritisimor/gomad/pkg/expr"
 	"github.com/Moritisimor/gomad/pkg/lexer"
+	"github.com/Moritisimor/gomad/pkg/parser"
 )
 
 
@@ -15,5 +17,14 @@ func main() {
 
 	for _, t := range tokens {
 		lexer.PrintToken(t)
+	}
+
+	parsedExprs, _, err := parser.Parse(tokens)
+	if err != nil {
+		fmt.Printf("Error while parsing: %s\n", err.Error())
+	}
+
+	for _, e := range parsedExprs {
+		expr.PrintExpr(e)
 	}
 }
