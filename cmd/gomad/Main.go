@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/Moritisimor/gomad/pkg/expr"
-	"github.com/Moritisimor/gomad/pkg/lexer"
-	"github.com/Moritisimor/gomad/pkg/parser"
+	"github.com/Moritisimor/gomad/expr"
+	"github.com/Moritisimor/gomad/lexer"
+	"github.com/Moritisimor/gomad/parser"
 )
 
 

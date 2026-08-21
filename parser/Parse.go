@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/Moritisimor/gomad/pkg/expr"
-	"github.com/Moritisimor/gomad/pkg/lexer"
+	"github.com/Moritisimor/gomad/expr"
+	"github.com/Moritisimor/gomad/lexer"
 )
 
 type Parser struct {
