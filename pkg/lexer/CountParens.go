@@ -13,5 +13,5 @@ func CountParens(tokens []Token) (int, int) {
 		}
 	}
 
-	return right, left
+	return left, right
 }

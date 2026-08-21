@@ -31,6 +31,6 @@ func PrintExpr(e Expression) {
 			}
 		}
 
-		fmt.Println(")")
+		fmt.Print(")")
 	}
 }

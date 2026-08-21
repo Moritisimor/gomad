@@ -1,6 +1,9 @@
 package lexer
 
-import "bytes"
+import (
+	"bytes"
+	"fmt"
+)
 
 func isNumeric(i byte) bool {
 	return i == '0' || i == '1' || i == '2' ||
@@ -104,6 +107,15 @@ func Tokenize(source_code string) ([]Token, error) {
 
 		acc = append(acc, SYMBOL{ symbol })
 		left = after
+	}
+
+	l, r := CountParens(acc)
+	if l > r {
+		return acc, fmt.Errorf("Unbalanced parentheses: One or more unclosed left parentheses. left: %d, right: %d", l, r)
+	}
+
+	if r > l {
+		return acc, fmt.Errorf("Unbalanced parentheses: One or more superfluous right parentheses. left: %d, right: %d", l, r)
 	}
 
 	return acc, nil
