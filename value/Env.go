@@ -42,4 +42,6 @@ func (e *Env) MutateBinding(name string, val Value) error {
 	return nil
 }
 
-func (e *Env) RegisterNative(name string, val func(e expr.Expression) (Value, error))
+func (e *Env) RegisterNative(name string, val func(e []expr.Expression, env *Env) (Value, error)) {
+	e.SetBinding(name, NativeFunction{ val })
+}

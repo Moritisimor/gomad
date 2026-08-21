@@ -74,7 +74,7 @@ func (r Record) String() string {
 	return acc.String()
 }
 
-type NativeFunction struct{ Callback func(e expr.Expression) (Value, error) }
+type NativeFunction struct{ Callback func(e []expr.Expression, env *Env) (Value, error) }
 func (n NativeFunction) v() {}
 func (n NativeFunction) String() string { return "<NATIVEFUNCTION>" }
 
@@ -84,10 +84,13 @@ type Macro struct {
 }
 
 func (m Macro) v() {}
-func (m Macro) ToString() string { return "<MACRO>" }
+func (m Macro) String() string { return "<MACRO>" }
 
 type Lambda struct {
 	Params []string
 	Body expr.Expression
 	Captured *Env
 }
+
+func (l Lambda) v() {}
+func (l Lambda) String() string { return "<LAMBDA>" }
