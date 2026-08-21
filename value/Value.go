@@ -15,12 +15,12 @@ type Value interface {
 
 type Unit struct{}
 
-func (u Unit) v() {}
+func (u Unit) v()             {}
 func (u Unit) String() string { return "<UNIT>" }
 
 type String struct{ Val string }
 
-func (s String) v() {}
+func (s String) v()             {}
 func (s String) String() string { return s.Val }
 
 type Number struct{ Val float64 }
@@ -29,14 +29,14 @@ func (n Number) v() {}
 func (n Number) String() string {
 	if math.Mod(n.Val, 1.0) == 0 {
 		return fmt.Sprintf("%d", int64(n.Val))
-	} 
+	}
 
 	return fmt.Sprintf("%.2f", n.Val)
 }
 
 type Boolean struct{ Val bool }
 
-func (b Boolean) v() {}
+func (b Boolean) v()             {}
 func (b Boolean) String() string { return fmt.Sprintf("%t", b.Val) }
 
 type List struct{ Val []Value }
@@ -56,7 +56,7 @@ func (l List) String() string {
 	return acc.String()
 }
 
-type Record struct { Val map[string]Value }
+type Record struct{ Val map[string]Value }
 
 func (r Record) v() {}
 func (r Record) String() string {
@@ -74,23 +74,26 @@ func (r Record) String() string {
 	return acc.String()
 }
 
-type NativeFunction struct{ Callback func(e []expr.Expression, env *Env) (Value, error) }
-func (n NativeFunction) v() {}
+type NativeFunction struct {
+	Callback func(e []expr.Expression, env *Env) (Value, error)
+}
+
+func (n NativeFunction) v()             {}
 func (n NativeFunction) String() string { return "<NATIVEFUNCTION>" }
 
-type Macro struct { 
-	Params []string
+type Macro struct {
+	Params      []string
 	Expressions expr.Expression
 }
 
-func (m Macro) v() {}
+func (m Macro) v()             {}
 func (m Macro) String() string { return "<MACRO>" }
 
 type Lambda struct {
-	Params []string
-	Body expr.Expression
+	Params   []string
+	Body     expr.Expression
 	Captured *Env
 }
 
-func (l Lambda) v() {}
+func (l Lambda) v()             {}
 func (l Lambda) String() string { return "<LAMBDA>" }

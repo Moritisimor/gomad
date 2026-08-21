@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	tokens, err := lexer.Tokenize("(+ (* \"hello \" \"world\") (+ 5 10))")
+	tokens, err := lexer.Tokenize("((lambda (n) (+ \"Hello, \" n)) \"John\")")
 	if err != nil {
 		fmt.Printf("Error while tokenizing: %s\n", err.Error())
 		return
@@ -36,12 +36,17 @@ func main() {
 
 	env := value.Env{
 		Bindings: map[string]value.Value{},
-		Parent: nil,
+		Parent:   nil,
 	}
 
 	stdlib.RegisterStdlib(&env)
 	for _, e := range parsedExprs {
 		val, err := eval.Eval(e, &env)
+		if val == nil {
+			fmt.Println("this is nil, but WHY???")
+			return
+		}
+
 		if err != nil {
 			fmt.Printf("Error while evaluating:\n\t%s\n", err.Error())
 			return

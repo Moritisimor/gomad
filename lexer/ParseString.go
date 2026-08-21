@@ -1,8 +1,8 @@
 package lexer
 
 import (
-	"strings"
 	"fmt"
+	"strings"
 )
 
 func parseString(left []byte) (string, []byte, error) {

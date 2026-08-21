@@ -6,7 +6,7 @@ import (
 	"github.com/Moritisimor/gomad/value"
 )
 
-func Err(format string, args... any) (value.Unit, error) {
+func Err(format string, args ...any) (value.Unit, error) {
 	return value.Unit{}, fmt.Errorf(format, args...)
 }
 

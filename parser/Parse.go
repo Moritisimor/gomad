@@ -20,15 +20,15 @@ func (p *Parser) parse() ([]expr.Expression, error) {
 
 		switch tok := t.(type) {
 		case lexer.NUMLIT:
-			acc = append(acc, expr.Number{ Val: tok.Val })
+			acc = append(acc, expr.Number{Val: tok.Val})
 			p.Cursor++
 
 		case lexer.STRINGLIT:
-			acc = append(acc, expr.String{ Val: tok.Val })
+			acc = append(acc, expr.String{Val: tok.Val})
 			p.Cursor++
 
 		case lexer.BOOLLIT:
-			acc = append(acc, expr.Boolean{ Val: tok.Val })
+			acc = append(acc, expr.Boolean{Val: tok.Val})
 			p.Cursor++
 
 		case lexer.UNITLIT:
@@ -36,7 +36,7 @@ func (p *Parser) parse() ([]expr.Expression, error) {
 			p.Cursor++
 
 		case lexer.SYMBOL:
-			acc = append(acc, expr.Symbol{ Val: tok.Val })
+			acc = append(acc, expr.Symbol{Val: tok.Val})
 			p.Cursor++
 
 		case lexer.LPAREN:
@@ -46,7 +46,7 @@ func (p *Parser) parse() ([]expr.Expression, error) {
 				return acc, err
 			}
 
-			acc = append(acc, expr.List{ Val: exprs })
+			acc = append(acc, expr.List{Val: exprs})
 
 		case lexer.RPAREN:
 			p.Cursor++

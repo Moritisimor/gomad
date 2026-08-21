@@ -1,9 +1,9 @@
 package lexer
 
 import (
-	"strings"
-	"strconv"
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 func parseNumber(left []byte) (float64, []byte, error) {

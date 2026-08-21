@@ -8,7 +8,7 @@ import (
 
 type Env struct {
 	Bindings map[string]Value
-	Parent *Env
+	Parent   *Env
 }
 
 func (e *Env) GetBinding(name string) (Value, error) {
@@ -18,7 +18,7 @@ func (e *Env) GetBinding(name string) (Value, error) {
 			return Unit{}, fmt.Errorf("No such binding: '%s'", name)
 		}
 
-		e.Parent.GetBinding(name)
+		return e.Parent.GetBinding(name)
 	}
 
 	return val, nil
@@ -43,5 +43,5 @@ func (e *Env) MutateBinding(name string, val Value) error {
 }
 
 func (e *Env) RegisterNative(name string, val func(e []expr.Expression, env *Env) (Value, error)) {
-	e.SetBinding(name, NativeFunction{ val })
+	e.SetBinding(name, NativeFunction{val})
 }

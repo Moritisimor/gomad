@@ -17,7 +17,7 @@ func RegisterFuns(env *value.Env) {
 			return helpers.WrongArgs("+", 2, len(e))
 		}
 
-		lhs, err := eval.Eval(e[0], env) 
+		lhs, err := eval.Eval(e[0], env)
 		if err != nil {
 			return helpers.Err("Error in LHS of +:\n\t%s", err.Error())
 		}
@@ -29,13 +29,13 @@ func RegisterFuns(env *value.Env) {
 
 		if a, ok := lhs.(value.Number); ok {
 			if b, ok := rhs.(value.Number); ok {
-				return value.Number{ Val: a.Val + b.Val }, nil
+				return value.Number{Val: a.Val + b.Val}, nil
 			}
 		}
 
 		if a, ok := lhs.(value.String); ok {
 			if b, ok := rhs.(value.String); ok {
-				return value.String{ Val: a.Val + b.Val }, nil
+				return value.String{Val: a.Val + b.Val}, nil
 			}
 		}
 
@@ -59,7 +59,7 @@ func RegisterFuns(env *value.Env) {
 
 		if a, ok := lhs.(value.Number); ok {
 			if b, ok := rhs.(value.Number); ok {
-				return value.Number{ Val: a.Val + b.Val }, nil
+				return value.Number{Val: a.Val + b.Val}, nil
 			}
 		}
 
@@ -83,7 +83,7 @@ func RegisterFuns(env *value.Env) {
 
 		if a, ok := lhs.(value.Number); ok {
 			if b, ok := rhs.(value.Number); ok {
-				return value.Number{ Val: a.Val * b.Val }, nil
+				return value.Number{Val: a.Val * b.Val}, nil
 			}
 
 			if b, ok := rhs.(value.String); ok {
@@ -92,7 +92,7 @@ func RegisterFuns(env *value.Env) {
 					acc.WriteString(b.Val)
 				}
 
-				return value.String{ Val: acc.String() }, nil
+				return value.String{Val: acc.String()}, nil
 			}
 		}
 
@@ -103,7 +103,7 @@ func RegisterFuns(env *value.Env) {
 					acc.WriteString(a.Val)
 				}
 
-				return value.String{ Val: acc.String() }, nil
+				return value.String{Val: acc.String()}, nil
 			}
 		}
 
@@ -127,7 +127,7 @@ func RegisterFuns(env *value.Env) {
 
 		if a, ok := lhs.(value.Number); ok {
 			if b, ok := rhs.(value.Number); ok {
-				return value.Number{ Val: a.Val / b.Val }, nil
+				return value.Number{Val: a.Val / b.Val}, nil
 			}
 		}
 
@@ -151,7 +151,7 @@ func RegisterFuns(env *value.Env) {
 
 		if a, ok := lhs.(value.Number); ok {
 			if b, ok := rhs.(value.Number); ok {
-				return value.Number{ Val: math.Mod(a.Val, b.Val) }, nil
+				return value.Number{Val: math.Mod(a.Val, b.Val)}, nil
 			}
 		}
 

@@ -1,22 +1,21 @@
 package eval
 
 import (
-	"fmt"
-
 	"github.com/Moritisimor/gomad/expr"
+	"github.com/Moritisimor/gomad/internal/helpers"
 	"github.com/Moritisimor/gomad/value"
 )
 
 func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 	switch exp := e.(type) {
 	case expr.Number:
-		return value.Number{ Val: exp.Val }, nil
+		return value.Number{Val: exp.Val}, nil
 
 	case expr.String:
-		return value.String{ Val: exp.Val }, nil
+		return value.String{Val: exp.Val}, nil
 
 	case expr.Boolean:
-		return value.Boolean{ Val: exp.Val }, nil
+		return value.Boolean{Val: exp.Val}, nil
 
 	case expr.Unit:
 		return value.Unit{}, nil
@@ -26,9 +25,10 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 
 	case expr.List:
 		if len(exp.Val) == 0 {
-			return value.List{ Val: []value.Value{} }, nil
+			return value.List{Val: []value.Value{}}, nil
 		}
 
+		invocationArgs := exp.Val[1:]
 		funExpr, err := Eval(exp.Val[0], env)
 		if err != nil {
 			return value.Unit{}, err
@@ -36,18 +36,39 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 
 		switch fun := funExpr.(type) {
 		case value.NativeFunction:
-			return fun.Callback(exp.Val[1:], env)
+			return fun.Callback(invocationArgs, env)
 
 		case value.Lambda:
-			panic("Lambdas are not yet implemented!")
+			if len(fun.Params) != len(invocationArgs) {
+				return helpers.Err(
+					"Lambda invoked with wrong amount of args. Expected: %d, Got: %d",
+					len(fun.Params), len(invocationArgs),
+				)
+			}
+
+			thisEnv := value.Env{
+				Bindings: map[string]value.Value{},
+				Parent: env,
+			}
+
+			for i := range len(invocationArgs) {
+				evaluated, err := Eval(invocationArgs[i], &thisEnv)
+				if err != nil {
+					return helpers.Err("Error while evaluating argument %d of lambda-invocation: %s", i, err.Error())
+				}
+
+				thisEnv.Bindings[fun.Params[i]] = evaluated
+			}
+
+			return Eval(fun.Body, &thisEnv)
 
 		case value.Macro:
 			panic("Macros are not yet implemented!")
 
 		default:
-			return value.Unit{}, fmt.Errorf("Attempt to invoke non-invocable value: '%s'", fun.String())
+			return helpers.Err("Attempt to invoke non-invocable value: '%s'", expr.SprintExpr(e))
 		}
 	}
 
-	return value.Unit{}, fmt.Errorf("Unknown expression, this should not have happened")
+	return helpers.Err("Unknown expression, this should not have happened")
 }

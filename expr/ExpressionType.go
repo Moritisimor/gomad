@@ -1,10 +1,10 @@
 package expr
 
-type Expression interface { e() }
+type Expression interface{ e() }
 
 type Lambda struct {
 	Params []string
-	Body Expression
+	Body   Expression
 }
 
 func (l Lambda) e() {}
