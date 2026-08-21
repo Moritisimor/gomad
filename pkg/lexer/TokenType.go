@@ -10,22 +10,22 @@ type RPAREN struct{}
 
 func (r RPAREN) t() {}
 
-type NUMLIT struct{ val float64 }
+type NUMLIT struct{ Val float64 }
 
 func (n NUMLIT) t() {}
 
-type BOOLLIT struct{ val bool }
+type BOOLLIT struct{ Val bool }
 
 func (b BOOLLIT) t() {}
 
-type STRINGLIT struct{ val string }
+type STRINGLIT struct{ Val string }
 
 func (s STRINGLIT) t() {}
 
-type UNITLIT struct{ val string }
+type UNITLIT struct{ Val string }
 
 func (u UNITLIT) t() {}
 
-type SYMBOL struct{ val string }
+type SYMBOL struct{ Val string }
 
 func (s SYMBOL) t() {}

@@ -5,13 +5,13 @@ import "fmt"
 func PrintToken(t Token) {
 	switch tok := t.(type) {
 	case STRINGLIT:
-		fmt.Printf("STRINGLIT(\"%s\")\n", tok.val)
+		fmt.Printf("STRINGLIT(\"%s\")\n", tok.Val)
 
 	case BOOLLIT:
-		fmt.Printf("BOOLLIT(%t)\n", tok.val)
+		fmt.Printf("BOOLLIT(%t)\n", tok.Val)
 
 	case NUMLIT:
-		fmt.Printf("NUMLIT(%f)\n", tok.val)
+		fmt.Printf("NUMLIT(%f)\n", tok.Val)
 
 	case LPAREN:
 		fmt.Println("LPAREN")
@@ -23,7 +23,7 @@ func PrintToken(t Token) {
 		fmt.Println("UNIT")
 
 	case SYMBOL:
-		fmt.Printf("SYMBOL('%s')\n", tok.val)
+		fmt.Printf("SYMBOL('%s')\n", tok.Val)
 
 	default:
 		fmt.Println("UNKNOWN")
