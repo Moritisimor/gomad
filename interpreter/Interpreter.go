@@ -66,7 +66,7 @@ func (i *Interpreter) DoString(sourceCode string) (value.Value, error) {
 	for _, exp := range ast {
 		evaluated, err := eval.Eval(exp, i.Env)
 		if err != nil {
-			return helpers.Err("Uncaught error: %s\n", err)
+			return helpers.Err("Uncaught error:\n\t%s", err)
 		}
 
 		lastExpr = evaluated

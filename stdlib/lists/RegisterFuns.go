@@ -15,7 +15,7 @@ func RegisterFuns(env *value.Env) {
 		for i, e := range e {
 			evaluated, err := eval.Eval(e, env)
 			if err != nil {
-				return value.NewUnit(), fmt.Errorf("Error in argument %d to list:\n\t%s", i, err.Error())
+				return value.NewUnit(), fmt.Errorf("Error in argument %d to list:\n\t%s", i+1, err.Error())
 			}
 
 			acc = append(acc, evaluated)

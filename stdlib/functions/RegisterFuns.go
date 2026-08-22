@@ -14,13 +14,13 @@ func RegisterFuns(env *value.Env) {
 
 		if params, ok := e[0].(expr.List); ok {
 			paramNames := []string{}
-			for _, p := range params.Val {
+			for i, p := range params.Val {
 				if s, ok := p.(expr.Symbol); ok {
 					paramNames = append(paramNames, s.Val)
 					continue
 				}
 
-				return helpers.Err("Non-symbol in parameter list of lambda")
+				return helpers.Err("Non-symbol in parameter list of lambda (argument %d)", i+1)
 			}
 
 			return value.Lambda{
