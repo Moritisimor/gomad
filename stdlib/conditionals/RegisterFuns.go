@@ -39,6 +39,59 @@ func RegisterFuns(env *value.Env) {
 		return evaluated, nil
 	})
 
+	env.RegisterNative("switch", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) < 2 {
+			return helpers.Err("Switch expected at least 2 arguments, but it got %d", len(e))
+		}
+
+		scrutinee := e[0]
+		cases := e[1:]
+
+		evaluatedScrutinee, err := eval.Eval(scrutinee, env)
+		if err != nil {
+			return helpers.Err("Error in scrutinee of match-expression:\n\t%s", err.Error())
+		}
+
+		for i, c := range cases {
+			if l, ok := c.(expr.List); ok {
+				if len(l.Val) != 2 {
+					return helpers.Err("Switch-arm %d has received bad syntax (2 elements in list expected)", i+1)
+				}
+
+				if s, ok := l.Val[0].(expr.Symbol); ok {
+					if s.Val == "_" {
+						evaluated, err := eval.Eval(l.Val[1], env)
+						if err != nil {
+							return helpers.Err("Error in value part of switch-arm %d:\n\t%s", i+1, err.Error())
+						}
+
+						return evaluated, nil
+					}
+				}
+
+				matcher, err := eval.Eval(l.Val[0], env)
+				if err != nil {
+					return helpers.Err("Error in case part of switch-arm %d:\n\t%s", i+1, err.Error())
+				}
+
+				if matcher == evaluatedScrutinee {
+					evaluated, err := eval.Eval(l.Val[1], env)
+					if err != nil {
+						return helpers.Err("Error in value part of switch-arm %d:\n\t%s", i+1, err.Error())
+					}
+
+					return evaluated, nil
+				}
+
+				continue
+			}
+
+			return helpers.Err("Switch-arm %d has received bad syntax (list expected)", i+1)
+		}
+
+		return value.NewUnit(), nil
+	})
+
 	env.RegisterNative("=", func(e []expr.Expression, env *value.Env) (value.Value, error) {
 		if len(e) != 2 {
 			return helpers.WrongArgs("=", 2, len(e))

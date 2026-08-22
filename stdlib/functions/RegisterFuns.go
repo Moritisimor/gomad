@@ -1,6 +1,7 @@
 package functions
 
 import (
+	"github.com/Moritisimor/gomad/eval"
 	"github.com/Moritisimor/gomad/expr"
 	"github.com/Moritisimor/gomad/internal/helpers"
 	"github.com/Moritisimor/gomad/value"
@@ -66,5 +67,20 @@ func RegisterFuns(env *value.Env) {
 		}
 
 		return value.NewUnit(), nil
+	})
+
+	env.RegisterNative("do", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		var lastExpr value.Value
+		lastExpr = value.NewUnit()
+		for i, exp := range e {
+			evaluated, err := eval.Eval(exp, env)
+			if err != nil {
+				return helpers.Err("Error in expression %d of do:\n\t%s", i, err.Error())
+			}
+
+			lastExpr = evaluated
+		}
+
+		return lastExpr, nil
 	})
 }
