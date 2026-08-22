@@ -60,7 +60,12 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 				thisEnv.Bindings[fun.Params[i]] = evaluated
 			}
 
-			return Eval(fun.Body, &thisEnv)
+			evaluated, err := Eval(fun.Body, &thisEnv)
+			if err != nil {
+				return helpers.Err("Error in body of lambda:\n\t%s", err.Error())
+			}
+
+			return evaluated, nil
 
 		case value.Macro:
 			panic("Macros are not yet implemented!")

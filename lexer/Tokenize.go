@@ -33,9 +33,9 @@ func skipToNewline(left []byte) []byte {
 	return []byte{} // nothing after newline, nothing to return
 }
 
-func Tokenize(source_code string) ([]Token, error) {
+func Tokenize(sourceCode string) ([]Token, error) {
 	acc := []Token{}
-	left := []byte(source_code)
+	left := []byte(sourceCode)
 
 	for len(left) != 0 {
 		if isWhiteSpace(left[0]) {
