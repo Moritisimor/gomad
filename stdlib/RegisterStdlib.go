@@ -2,6 +2,7 @@ package stdlib
 
 import (
 	"github.com/Moritisimor/gomad/stdlib/arithmetics"
+	"github.com/Moritisimor/gomad/stdlib/conditionals"
 	"github.com/Moritisimor/gomad/stdlib/functions"
 	"github.com/Moritisimor/gomad/stdlib/iolib"
 	"github.com/Moritisimor/gomad/stdlib/lists"
@@ -15,4 +16,5 @@ func RegisterStdlib(env *value.Env) {
 	iolib.RegisterFuns(env)
 	lists.RegisterFuns(env)
 	variables.RegisterFuns(env)
+	conditionals.RegisterFuns(env)
 }
