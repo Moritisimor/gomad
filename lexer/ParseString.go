@@ -8,27 +8,37 @@ import (
 func parseString(left []byte) (string, []byte, error) {
 	acc := strings.Builder{}
 	wasFinished := false
+	skipNext := false
 	steps := 0
 
-	for _, c := range left {
+	for i, c := range left {
 		steps++
+		if skipNext {
+			skipNext = false
+			continue
+		}
+
 		if c == '"' {
 			wasFinished = true
 			break
 		}
 
-		if c == '\n' {
+		if c == '\\' && len(left) >= i+1 && left[i+1] == 'n' {
 			acc.WriteByte('\n')
+			skipNext = true
 			continue
 		}
 
-		if c == '\t' {
+		if c == '\\' && len(left) >= i+1 && left[i+1] == 't' {
 			acc.WriteByte('\t')
+			skipNext = true
 			continue
 		}
 
-		if c == '\b' {
+		if c == '\\' && len(left) >= i+1 && left[i+1] == 'b' {
 			acc.WriteByte('\b')
+			skipNext = true
+			continue
 		}
 
 		acc.WriteByte(c)
