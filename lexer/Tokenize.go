@@ -9,7 +9,7 @@ func isNumeric(i byte) bool {
 	return i == '0' || i == '1' || i == '2' ||
 		i == '3' || i == '4' || i == '5' ||
 		i == '6' || i == '7' || i == '8' ||
-		i == '9' || i == '-' // for negative numbers
+		i == '9'
 }
 
 func isWhiteSpace(i byte) bool {
@@ -89,7 +89,9 @@ func Tokenize(sourceCode string) ([]Token, error) {
 			continue
 		}
 
-		if isNumeric(left[0]) {
+		if isNumeric(left[0]) || 
+			(left[0] == '-' && len(left) > 1 && isNumeric(left[1])) {
+
 			parsedNumber, after, err := parseNumber(left)
 			if err != nil {
 				return acc, err
