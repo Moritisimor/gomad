@@ -5,21 +5,21 @@ func NewUnit() Unit {
 }
 
 func NewNumber(n float64) Number {
-	return Number{ Val: n }
+	return Number{Val: n}
 }
 
 func NewString(s string) String {
-	return String{ Val: s }
+	return String{Val: s}
 }
 
 func NewBool(b bool) Boolean {
-	return Boolean{ Val: b }
+	return Boolean{Val: b}
 }
 
 func NewList(l []Value) List {
-	return List{ Val: l }
+	return List{Val: l}
 }
 
 func NewRecord(r map[string]Value) Record {
-	return Record{ Val: r }
+	return Record{Val: r}
 }

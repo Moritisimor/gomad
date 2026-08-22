@@ -29,7 +29,7 @@ func New() *Interpreter {
 func NewNoStdlib() *Interpreter {
 	return &Interpreter{
 		Env: &value.Env{
-			Parent: nil,
+			Parent:   nil,
 			Bindings: map[string]value.Value{},
 		},
 	}
