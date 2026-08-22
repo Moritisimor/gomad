@@ -43,7 +43,7 @@ func RegisterFuns(env *value.Env) {
 		if s, ok := e[0].(expr.Symbol); ok {
 			funName = s.Val
 		} else {
-			return helpers.Err("Function name was expected to be a symbol, got: %s", expr.SprintExpr(e[0]))
+			return helpers.Err("Function name was expected to be a symbol, got: %s", e[0].String())
 		}
 
 		params := []string{}
@@ -59,8 +59,8 @@ func RegisterFuns(env *value.Env) {
 		}
 
 		if err := env.SetBinding(funName, value.Lambda{
-			Params: params,
-			Body: e[2],
+			Params:   params,
+			Body:     e[2],
 			Captured: env,
 		}); err != nil {
 			return helpers.Err("Error while binding function '%s':\n\t%s", funName, err.Error())

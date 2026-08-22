@@ -59,7 +59,7 @@ func RegisterFuns(env *value.Env) {
 
 		if a, ok := lhs.(value.Number); ok {
 			if b, ok := rhs.(value.Number); ok {
-				return value.Number{Val: a.Val + b.Val}, nil
+				return value.Number{Val: a.Val - b.Val}, nil
 			}
 		}
 

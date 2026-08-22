@@ -17,7 +17,7 @@ func RegisterFuns(env *value.Env) {
 		if s, ok := e[0].(expr.Symbol); ok {
 			varName = s.Val
 		} else {
-			return helpers.Err("Name of let-binding was expected to be a symbol (%s)", expr.SprintExpr(e[0]))
+			return helpers.Err("Name of let-binding was expected to be a symbol (%s)", e[0].String())
 		}
 
 		evaluated, err := eval.Eval(e[1], env)
@@ -41,7 +41,7 @@ func RegisterFuns(env *value.Env) {
 		if s, ok := e[0].(expr.Symbol); ok {
 			varName = s.Val
 		} else {
-			return helpers.Err("First argument to mut was expected to be a symbol (%s)", expr.SprintExpr(e[0]))
+			return helpers.Err("First argument to mut was expected to be a symbol (%s)", e[0].String())
 		}
 
 		evaluated, err := eval.Eval(e[1], env)
@@ -52,7 +52,7 @@ func RegisterFuns(env *value.Env) {
 		if err := env.MutateBinding(varName, evaluated); err != nil {
 			return helpers.Err("Error while mutating binding '%s':\n\t%s", varName, err.Error())
 		}
-		
+
 		return value.NewUnit(), nil
 	})
 }

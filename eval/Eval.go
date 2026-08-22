@@ -71,7 +71,7 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 			panic("Macros are not yet implemented!")
 
 		default:
-			return helpers.Err("Attempt to invoke non-invocable value: '%s'", expr.SprintExpr(e))
+			return helpers.Err("Attempt to invoke non-invocable value: '%s'", e.String())
 		}
 	}
 

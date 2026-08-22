@@ -13,7 +13,7 @@ func Err(format string, args ...any) (value.Unit, error) {
 
 func BadType[T any](expectedType string, e expr.Expression) (T, error) {
 	var t T
-	return t, fmt.Errorf("This expression was expected to evaluate to a %s, but it didn't: %s", expectedType, expr.SprintExpr(e))
+	return t, fmt.Errorf("This expression was expected to evaluate to a %s, but it didn't: %s", expectedType, e.String())
 }
 
 func WrongArgs(name string, expected, actual int) (value.Unit, error) {

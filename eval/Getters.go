@@ -87,9 +87,9 @@ func GetLambda(e expr.Expression, env *value.Env) (value.Lambda, error) {
 }
 
 func GetNative(
-	e expr.Expression, 
+	e expr.Expression,
 	env *value.Env,
-) (func (e []expr.Expression, env *value.Env) (value.Value, error), error) {
+) (func(e []expr.Expression, env *value.Env) (value.Value, error), error) {
 	fun := func(e []expr.Expression, env *value.Env) (value.Value, error) {
 		return value.Unit{}, fmt.Errorf("You're not supposed to invoke me!")
 	}
