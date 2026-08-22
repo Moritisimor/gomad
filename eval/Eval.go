@@ -54,7 +54,7 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 			for i := range len(invocationArgs) {
 				evaluated, err := Eval(invocationArgs[i], &thisEnv)
 				if err != nil {
-					return helpers.Err("Error while evaluating argument %d of lambda-invocation: %s", i, err.Error())
+					return helpers.Err("Error while evaluating argument %d of lambda-invocation:\n\t%s", i, err.Error())
 				}
 
 				thisEnv.Bindings[fun.Params[i]] = evaluated
