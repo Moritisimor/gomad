@@ -89,7 +89,7 @@ func Tokenize(sourceCode string) ([]Token, error) {
 			continue
 		}
 
-		if isNumeric(left[0]) || 
+		if isNumeric(left[0]) ||
 			(left[0] == '-' && len(left) > 1 && isNumeric(left[1])) {
 
 			parsedNumber, after, err := parseNumber(left)

@@ -48,11 +48,12 @@ func (l List) String() string {
 
 	for i, v := range l.Val {
 		acc.WriteString(v.String())
-		if i != len(l.Val) {
+		if i != len(l.Val)-1 {
 			acc.WriteString(", ")
 		}
 	}
 
+	acc.WriteByte(')')
 	return acc.String()
 }
 
