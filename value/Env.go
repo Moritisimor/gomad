@@ -34,8 +34,13 @@ func (e *Env) SetBinding(name string, val Value) error {
 }
 
 func (e *Env) MutateBinding(name string, val Value) error {
-	if _, ok := e.Bindings[name]; !ok {
-		return fmt.Errorf("Cannot mutate binding '%s': Doesn't exist", name)
+	_, ok := e.Bindings[name]
+	if !ok {
+		if e.Parent == nil {
+			return fmt.Errorf("No such binding: '%s'", name)
+		}
+
+		return e.Parent.MutateBinding(name, val)
 	}
 
 	e.Bindings[name] = val
