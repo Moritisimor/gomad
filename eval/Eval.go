@@ -48,7 +48,7 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 
 			thisEnv := value.Env{
 				Bindings: map[string]value.Value{},
-				Parent:   env,
+				Parent:   fun.Captured,
 			}
 
 			for i := range len(invocationArgs) {
