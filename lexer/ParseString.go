@@ -23,6 +23,12 @@ func parseString(left []byte) (string, []byte, error) {
 			break
 		}
 
+		if c == '\\' && len(left) >= i+1 && left[i+1] == '"' {
+			acc.WriteByte('"')
+			skipNext = true
+			continue
+		}
+
 		if c == '\\' && len(left) >= i+1 && left[i+1] == 'n' {
 			acc.WriteByte('\n')
 			skipNext = true
