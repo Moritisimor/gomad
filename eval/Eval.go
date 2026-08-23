@@ -68,10 +68,28 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 			return evaluated, nil
 
 		case value.Macro:
-			
+			if len(fun.Params) != len(invocationArgs) {
+				return helpers.Err(
+					"Macro invoked with wrong amount of args. Expected: %d, got: %d",
+					len(fun.Params), len(invocationArgs),
+				)
+			}
+
+			kvPairs := map[string]expr.Expression{}
+			for i := range len(fun.Params) {
+				kvPairs[fun.Params[i]] = invocationArgs[i]
+			}
+
+			newExpr := ConstructMacro([]expr.Expression{}, fun.Expressions, kvPairs)
+			_, err := Eval(newExpr, env)
+			if err != nil {
+				return helpers.Err("Error in macro-invocation:\n\t%s", err.Error())
+			}
+
+			return value.NewUnit(), nil
 
 		default:
-			return helpers.Err("Attempt to invoke non-invocable value: '%s'", e.String())
+			return helpers.Err("Attempt to invoke non-invocable value: %s (%s)", e.String(), funExpr.String())
 		}
 	}
 

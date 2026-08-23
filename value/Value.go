@@ -84,7 +84,7 @@ func (n NativeFunction) String() string { return "<NATIVEFUNCTION>" }
 
 type Macro struct {
 	Params      []string
-	Expressions expr.Expression
+	Expressions []expr.Expression
 }
 
 func (m Macro) v()             {}
