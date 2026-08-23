@@ -52,9 +52,9 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 			}
 
 			for i := range len(invocationArgs) {
-				evaluated, err := Eval(invocationArgs[i], &thisEnv)
+				evaluated, err := Eval(invocationArgs[i], env)
 				if err != nil {
-					return helpers.Err("Error while evaluating argument %d of lambda-invocation:\n\t%s", i, err.Error())
+					return helpers.Err("Error while evaluating argument %d of lambda-invocation:\n\t%s", i+1, err.Error())
 				}
 
 				thisEnv.Bindings[fun.Params[i]] = evaluated
@@ -68,7 +68,7 @@ func Eval(e expr.Expression, env *value.Env) (value.Value, error) {
 			return evaluated, nil
 
 		case value.Macro:
-			panic("Macros are not yet implemented!")
+			
 
 		default:
 			return helpers.Err("Attempt to invoke non-invocable value: '%s'", e.String())
