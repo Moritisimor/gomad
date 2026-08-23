@@ -12,7 +12,7 @@ import (
 func main() {
 	interp := interpreter.New()
 	if len(os.Args) == 1 {
-		modes.Repl(interp, color.SprintMagenta("Nomad λ "))
+		modes.Repl(interp, color.SprintMagenta("Gomad λ "))
 		return
 	}
 
