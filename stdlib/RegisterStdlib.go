@@ -6,6 +6,7 @@ import (
 	"github.com/Moritisimor/gomad/stdlib/functions"
 	"github.com/Moritisimor/gomad/stdlib/iolib"
 	"github.com/Moritisimor/gomad/stdlib/lists"
+	"github.com/Moritisimor/gomad/stdlib/records"
 	"github.com/Moritisimor/gomad/stdlib/variables"
 	"github.com/Moritisimor/gomad/value"
 )
@@ -17,4 +18,5 @@ func RegisterStdlib(env *value.Env) {
 	lists.RegisterFuns(env)
 	variables.RegisterFuns(env)
 	conditionals.RegisterFuns(env)
+	records.RegisterFuns(env)
 }

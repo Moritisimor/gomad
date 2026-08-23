@@ -13,6 +13,13 @@ import (
 )
 
 func RegisterFuns(env *value.Env) {
+	args := []value.Value{}
+	for _, a := range os.Args[1:] {
+		args = append(args, value.NewString(a))
+	}
+
+	env.Bindings["args"] = value.NewList(args)
+
 	env.RegisterNative("print", func(e []expr.Expression, env *value.Env) (value.Value, error) {
 		for i, exp := range e {
 			evaluated, err := eval.Eval(exp, env)

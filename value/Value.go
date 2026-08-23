@@ -68,10 +68,10 @@ func (r Record) String() string {
 		acc.WriteString(k)
 		acc.WriteString(": ")
 		acc.WriteString(v.String())
-		acc.WriteByte(')')
+		acc.WriteString(") ")
 	}
 
-	acc.WriteString(" }")
+	acc.WriteString("}")
 	return acc.String()
 }
 

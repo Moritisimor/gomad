@@ -10,8 +10,6 @@ import (
 	"github.com/chzyer/readline"
 )
 
-
-
 func Repl(interp *interpreter.Interpreter) {
 	color.PrintGreenln("Welcome to the Gomad REPL!")
 	editor, err := readline.New(color.SprintMagenta("Gomad >> "))
