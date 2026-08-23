@@ -1,9 +1,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 
+	"github.com/Moritisimor/EpsilonFetch/pkg/color"
 	"github.com/Moritisimor/gomad/internal/modes"
 	"github.com/Moritisimor/gomad/interpreter"
 )
@@ -11,7 +12,7 @@ import (
 func main() {
 	interp := interpreter.New()
 	if len(os.Args) == 1 {
-		modes.Repl(interp)
+		modes.Repl(interp, color.SprintMagenta("Nomad λ "))
 		return
 	}
 

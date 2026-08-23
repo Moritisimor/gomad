@@ -10,9 +10,9 @@ import (
 	"github.com/chzyer/readline"
 )
 
-func Repl(interp *interpreter.Interpreter) {
+func Repl(interp *interpreter.Interpreter, prompt string) {
 	color.PrintGreenln("Welcome to the Gomad REPL!")
-	editor, err := readline.New(color.SprintMagenta("Gomad >> "))
+	editor, err := readline.New(prompt)
 	if err != nil {
 		color.PrintRedln(fmt.Sprintf("Error while setting up readline: %s\n", err.Error()))
 		os.Exit(1)
