@@ -83,4 +83,57 @@ func RegisterFuns(env *value.Env) {
 
 		return lastExpr, nil
 	})
+
+	env.RegisterNative("scoped", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 2 {
+			return helpers.WrongArgs("scoped", 2, len(e))
+		}
+
+		bindings, ok := e[0].(expr.List)
+		if !ok {
+			return helpers.Err("Error in argument 1 to scoped: expected list (%s)", e[0].String())
+		}
+
+		acc := map[string]value.Value{}
+		for i, b := range bindings.Val {
+			l, ok := b.(expr.List)
+			if !ok {
+				return helpers.Err("Error in element %d of bindings-list in scoped: expected list(%s)", i+1, b.String())
+			}
+
+			if len(l.Val) != 2 {
+				return helpers.Err(
+					"Error in element %d of bindings-list in scoped: list was expected to have length of 2, got: %d",
+					i+1, len(e),
+				)
+			}
+
+			s, ok := l.Val[0].(expr.Symbol)
+			if !ok {
+				return helpers.Err(
+					"Error in element %d of bindings-list in scoped: binding-name was expected to be a symbol (%s)",
+					i+1, l.Val[0].String(),
+				)
+			}
+
+			evaluated, err := eval.Eval(l.Val[1], env)
+			if err != nil {
+				return helpers.Err("Error in element %d of bindings-list in scoped:\n\t%s", i+1, err.Error())
+			}
+
+			acc[s.Val] = evaluated
+		}
+
+		thisScope := value.Env{
+			Bindings: acc,
+			Parent: env,
+		}
+
+		evaluated, err := eval.Eval(e[1], &thisScope)
+		if err != nil {
+			return helpers.Err("Error while evaluating expression of scoped:\n\t%s", err.Error())
+		}
+
+		return evaluated, nil
+	})
 }

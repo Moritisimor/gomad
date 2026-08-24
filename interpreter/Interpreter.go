@@ -46,6 +46,10 @@ func NewNoStdlib() *Interpreter {
 	}
 }
 
+func (i *Interpreter) GetBinding(name string) (value.Value, error) {
+	return i.Env.GetBinding(name)
+}
+
 func (i *Interpreter) Set(name string, val value.Value) {
 	i.Env.Bindings[name] = val
 }
