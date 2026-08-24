@@ -8,7 +8,7 @@ import (
 	"github.com/Moritisimor/gomad/internal/helpers"
 	"github.com/Moritisimor/gomad/lexer"
 	"github.com/Moritisimor/gomad/parser"
-	"github.com/Moritisimor/gomad/stdlib"
+	"github.com/Moritisimor/gomad/prelude"
 	"github.com/Moritisimor/gomad/value"
 )
 
@@ -22,7 +22,7 @@ func New() *Interpreter {
 		Bindings: map[string]value.Value{},
 	}
 
-	stdlib.RegisterStdlib(env)
+	prelude.RegisterCommonPrelude(env)
 	return &Interpreter{Env: env}
 }
 
