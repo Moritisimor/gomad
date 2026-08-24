@@ -15,18 +15,16 @@ type Interpreter struct {
 	Env *value.Env
 }
 
-func New() (*Interpreter, error) {
+func New() *Interpreter {
 	env := &value.Env{
 		Parent:   nil,
 		Bindings: map[string]value.Value{},
 	}
 
 	prelude.RegisterCommonPrelude(env)
-	if err := preludesrc.RegisterPreludeSrc(env); err != nil {
-		return nil, err	
-	}
+	preludesrc.RegisterPreludeSrc(env)
 
-	return &Interpreter{Env: env}, nil
+	return &Interpreter{Env: env}
 }
 
 func NewNoSrcPrelude() *Interpreter {

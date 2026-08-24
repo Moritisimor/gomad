@@ -5,8 +5,8 @@ import (
 	"github.com/Moritisimor/gomad/value"
 )
 
-func RegisterFuns(env *value.Env) error {
-	if _, err := eval.DoString(`
+func RegisterFuns(env *value.Env) {
+	eval.DoString(`
 		(letfun foldl (f acc l)
     		(do
       			(letfun aux (a h t)
@@ -15,11 +15,9 @@ func RegisterFuns(env *value.Env) error {
           			(aux (f a h) (car t) (cdr t))))
       
     			(aux acc (car l) (cdr l))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun begins_with (l1 l2)
     		(if (< (len l1) (len l2))
       			false
@@ -32,17 +30,10 @@ func RegisterFuns(env *value.Env) error {
               				false)))
                 
         			(aux (car l1) (cdr l1) (car l2) (cdr l2)))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
-		(letfun ends_with (l1 l2) (begins_with (rev l1) (rev l2)))
-	`, env); err != nil {
-		return err
-	}
-
-	if _, err := eval.DoString(`
+	eval.DoString(`(letfun ends_with (l1 l2) (begins_with (rev l1) (rev l2)))`, env)
+	eval.DoString(`
 		(letfun list_init (n f)
     		(do
       			(letfun aux (acc i)
@@ -51,11 +42,9 @@ func RegisterFuns(env *value.Env) error {
           			(aux (cons (f i) acc) (dec i))))
           
       			(aux () (dec n))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun rev (l)
     		(do
       			(letfun aux (acc h t)
@@ -64,11 +53,9 @@ func RegisterFuns(env *value.Env) error {
           			(aux (cons h acc) (car t) (cdr t))))
           
       			(aux () (car l) (cdr l))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun map (f l)
     		(do
       			(letfun aux (acc h t)
@@ -77,11 +64,9 @@ func RegisterFuns(env *value.Env) error {
           				(aux (cons (f h) acc) (car t) (cdr t))))
         
       			(aux () (car l) (cdr l))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun mapi (f l)
     		(do
       			(letfun aux (acc h t i)
@@ -90,11 +75,9 @@ func RegisterFuns(env *value.Env) error {
           				(aux (cons (f h i) acc) (car t) (cdr t) (inc i))))
           
       			(aux () (car l) (cdr l) 0)))
-	`, env); err != nil { 
-		return err 
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun filter (f l)
     		(do
       			(letfun aux (acc h t)
@@ -105,11 +88,9 @@ func RegisterFuns(env *value.Env) error {
             				(aux acc (car t) (cdr t)))))
         
       			(aux () (car l) (cdr l))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun foreach (f l)
     		(do
       			(letfun aux (h t)
@@ -121,11 +102,9 @@ func RegisterFuns(env *value.Env) error {
             				(aux (car t) (cdr t))))))
           
       			(aux (car l) (cdr l))))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun foreachi (f l)
     		(do
       			(letfun aux (h t i)
@@ -137,11 +116,9 @@ func RegisterFuns(env *value.Env) error {
               				(aux (car t) (cdr t) (inc i))))))
           
       			(aux (car l) (cdr l) 0)))
-	`, env); err != nil {
-		return err
-	}
+	`, env)
 
-	if _, err := eval.DoString(`
+	eval.DoString(`
 		(letfun range (start end list)
     		(do
       			(letfun aux (acc h t i)
@@ -152,9 +129,5 @@ func RegisterFuns(env *value.Env) error {
             				(aux acc (car t) (cdr t) (inc i)))))
         
       			(aux () (car list) (cdr list) 0)))
-	`, env); err != nil {
-		return err
-	}
-
-	return nil
+	`, env)
 }
