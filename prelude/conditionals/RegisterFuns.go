@@ -221,4 +221,61 @@ func RegisterFuns(env *value.Env) {
 
 		return value.NewBool(lhs <= rhs), nil
 	})
+
+	env.RegisterNative("not", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 1 {
+			return helpers.WrongArgs("not", 1, len(e))
+		}
+
+		cond, err := eval.GetBoolean(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument to not:\n\t%s", err.Error())
+		}
+
+		return value.NewBool(!cond), nil
+	})
+
+	env.RegisterNative("and", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 2 {
+			return helpers.WrongArgs("and", 2, len(e))
+		}
+
+		lhs, err := eval.GetBoolean(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in LHS of and:\n\t%s", err.Error())
+		}
+
+		if !lhs {
+			return value.NewBool(false), nil
+		}
+
+		rhs, err := eval.GetBoolean(e[1], env)
+		if err != nil {
+			return helpers.Err("Error in RHS of and:\n\t%s", err.Error())
+		}
+
+		return value.NewBool(rhs), nil
+	})
+
+	env.RegisterNative("or", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 2 {
+			return helpers.WrongArgs("or", 2, len(e))
+		}
+
+		lhs, err := eval.GetBoolean(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in LHS of or:\n\t%s", err.Error())
+		}
+
+		if lhs {
+			return value.NewBool(true), nil
+		}
+
+		rhs, err := eval.GetBoolean(e[1], env)
+		if err != nil {
+			return helpers.Err("Error in RHS of or:\n\t%s", err.Error())
+		}
+
+		return value.NewBool(rhs), nil
+	})
 }
