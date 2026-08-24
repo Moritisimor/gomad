@@ -10,14 +10,6 @@ type Expression interface {
 	String() string
 }
 
-type Lambda struct {
-	Params []string
-	Body   Expression
-}
-
-func (l Lambda) e()             {}
-func (l Lambda) String() string { return "<LAMBDA>" }
-
 type Symbol struct{ Val string }
 
 func (s Symbol) e()             {}
