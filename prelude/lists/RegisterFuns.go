@@ -106,7 +106,7 @@ func RegisterFuns(env *value.Env) {
 
 		l, err := eval.GetList(e[1], env)
 		if err != nil {
-			return helpers.Err("Error in argument l to push:\n\t%s", err.Error())
+			return helpers.Err("Error in argument 2 to push:\n\t%s", err.Error())
 		}
 
 		return value.NewList(append(l, elem)), nil
