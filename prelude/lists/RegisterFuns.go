@@ -1,6 +1,8 @@
 package lists
 
 import (
+	"slices"
+
 	"github.com/Moritisimor/gomad/eval"
 	"github.com/Moritisimor/gomad/expr"
 	"github.com/Moritisimor/gomad/internal/helpers"
@@ -54,6 +56,107 @@ func RegisterFuns(env *value.Env) {
 		}
 
 		return value.NewList(evaluated[1:]), nil
+	})
+
+	env.RegisterNative("cons", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 2 {
+			return helpers.WrongArgs("cons", 2, len(e))
+		}
+
+		elem, err := eval.Eval(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument 1 to cons:\n\t%s", err.Error())
+		}
+
+		l, err := eval.GetList(e[1], env)
+		if err != nil {
+			return helpers.Err("Error in argument 2 to cons:\n\t%s", err.Error())
+		}
+
+		return value.NewList(slices.Insert(l, 0, elem)), nil
+	})
+
+	env.RegisterNative("append", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 2 {
+			return helpers.WrongArgs("append", 2, len(e))
+		}
+
+		l1, err := eval.GetList(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument 1 to append:\n\t%s", err.Error())
+		}
+
+		l2, err := eval.GetList(e[1], env)
+		if err != nil {
+			return helpers.Err("Error in argument 2 to append:\n\t%s", err.Error())
+		}
+
+		return value.NewList(slices.Concat(l1, l2)), nil
+	})
+
+	env.RegisterNative("push", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 2 {
+			return helpers.WrongArgs("push", 2, len(e))
+		}
+
+		elem, err := eval.Eval(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument 1 to push:\n\t%s", err.Error())
+		}
+
+		l, err := eval.GetList(e[1], env)
+		if err != nil {
+			return helpers.Err("Error in argument l to push:\n\t%s", err.Error())
+		}
+
+		return value.NewList(append(l, elem)), nil
+	})
+
+	env.RegisterNative("first", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 1 {
+			return helpers.WrongArgs("first", 1, len(e))
+		}
+
+		l, err := eval.GetList(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument 1 to first:\n\t%s", err.Error())
+		}
+
+		if len(l) == 0 {
+			return helpers.Err("List holds no such index")
+		}
+
+		return l[0], nil
+	})
+
+	env.RegisterNative("last", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 1 {
+			return helpers.WrongArgs("last", 1, len(e))
+		}
+
+		l, err := eval.GetList(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument 1 to last:\n\t%s", err.Error())
+		}
+
+		if len(l) == 0 {
+			return helpers.Err("List holds no such index")
+		}
+
+		return l[len(l)-1], nil
+	})
+
+	env.RegisterNative("len", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 1 {
+			return helpers.WrongArgs("len", 1, len(e))
+		}
+
+		l, err := eval.GetList(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument 1 to len:\n\t%s", err.Error())
+		}
+
+		return value.NewNumber(float64(len(l))), nil
 	})
 
 	env.RegisterNative("nth", func(e []expr.Expression, env *value.Env) (value.Value, error) {
