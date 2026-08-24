@@ -12,6 +12,7 @@ import (
 	"github.com/Moritisimor/gomad/prelude/macros"
 	"github.com/Moritisimor/gomad/prelude/records"
 	"github.com/Moritisimor/gomad/prelude/stringlib"
+	"github.com/Moritisimor/gomad/prelude/typechecking"
 	"github.com/Moritisimor/gomad/prelude/variables"
 	"github.com/Moritisimor/gomad/value"
 )
@@ -27,4 +28,5 @@ func RegisterCommonPrelude(env *value.Env) {
 	macros.RegisterFuns(env)
 	exceptions.RegisterFuns(env)
 	stringlib.RegisterFuns(env)
+	typechecking.RegisterFuns(env)
 }
