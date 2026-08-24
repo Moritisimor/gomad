@@ -161,4 +161,26 @@ func RegisterFuns(env *value.Env) {
 
 		return helpers.Err("Cannot apply modulo on these expressions: (%s) and (%s)", lhs.String(), rhs.String())
 	})
+
+	env.SetBinding("inc", value.Lambda{
+		Params: []string{"x"},
+		Body: expr.List{Val: []expr.Expression{
+			expr.Symbol{Val: "+"},
+			expr.Symbol{Val: "x"},
+			expr.Number{Val: 1},
+		}},
+
+		Captured: env,
+	})
+
+	env.SetBinding("dec", value.Lambda{
+		Params: []string{"x"},
+		Body: expr.List{Val: []expr.Expression{
+			expr.Symbol{Val: "-"},
+			expr.Symbol{Val: "x"},
+			expr.Number{Val: 1},
+		}},
+
+		Captured: env,
+	})
 }

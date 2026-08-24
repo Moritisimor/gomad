@@ -3,7 +3,7 @@ package eval
 import "github.com/Moritisimor/gomad/expr"
 
 func ConstructMacro(
-	acc, left []expr.Expression, 
+	acc, left []expr.Expression,
 	kvPairs map[string]expr.Expression,
 ) expr.Expression {
 	if len(left) == 0 {
@@ -13,7 +13,7 @@ func ConstructMacro(
 	if s, ok := left[0].(expr.Symbol); ok {
 		val, ok := kvPairs[s.Val]
 		if !ok {
-			return ConstructMacro(append(acc, s), left[1:], kvPairs) 
+			return ConstructMacro(append(acc, s), left[1:], kvPairs)
 		}
 
 		return ConstructMacro(append(acc, val), left[1:], kvPairs)

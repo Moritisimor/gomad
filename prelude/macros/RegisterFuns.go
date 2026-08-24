@@ -32,9 +32,9 @@ func RegisterFuns(env *value.Env) {
 
 			return helpers.Err("Non-symbol in parameter list of letmac '%s' (argument %d)", macName, i+1)
 		}
-	
+
 		env.SetBinding(macName, value.Macro{
-			Params: macParams,
+			Params:      macParams,
 			Expressions: e[2:],
 		})
 

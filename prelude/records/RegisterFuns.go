@@ -87,4 +87,4 @@ func RegisterFuns(env *value.Env) {
 		rec[fieldName.Val] = newExpr
 		return value.NewUnit(), nil
 	})
-} 
+}

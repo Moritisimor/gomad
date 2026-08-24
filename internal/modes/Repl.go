@@ -26,7 +26,7 @@ func Repl(interp *interpreter.Interpreter, prompt string) {
 			}
 
 			if err == io.EOF {
-				color.PrintBlueln("Bye")	
+				color.PrintBlueln("Bye")
 				return
 			}
 
