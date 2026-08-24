@@ -22,13 +22,16 @@ import (
 
 func main() {
 	interp := interpreter.New() // Instantiate new interpreter
-	interp.RegisterNative("hello", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+	interp.RegisterNative("hello", func(
+        e []expr.Expression, 
+        env *value.Env,
+    ) (value.Value, error) {
 		fmt.Println("Hello from Go!")
-		return value.NewUnit(), nil // Unit is similar to null from other languages
+		return value.NewUnit(), nil // Unit is similar to null 
 		// nil because no error occurred
 	})
 
-	evaluated, err := interp.DoString("(hello)") // S-Expression syntax
+	evaluated, err := interp.DoString("(hello)") // S-Expressions
 	if err != nil {
 		fmt.Printf("Error while evaluating: %s\n", err.Error())
 	} else {
