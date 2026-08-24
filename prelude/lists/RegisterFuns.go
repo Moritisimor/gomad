@@ -112,23 +112,6 @@ func RegisterFuns(env *value.Env) {
 		return value.NewList(append(l, elem)), nil
 	})
 
-	env.RegisterNative("first", func(e []expr.Expression, env *value.Env) (value.Value, error) {
-		if len(e) != 1 {
-			return helpers.WrongArgs("first", 1, len(e))
-		}
-
-		l, err := eval.GetList(e[0], env)
-		if err != nil {
-			return helpers.Err("Error in argument 1 to first:\n\t%s", err.Error())
-		}
-
-		if len(l) == 0 {
-			return helpers.Err("List holds no such index")
-		}
-
-		return l[0], nil
-	})
-
 	env.RegisterNative("last", func(e []expr.Expression, env *value.Env) (value.Value, error) {
 		if len(e) != 1 {
 			return helpers.WrongArgs("last", 1, len(e))
