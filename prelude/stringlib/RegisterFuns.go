@@ -101,4 +101,22 @@ func RegisterFuns(env *value.Env) {
 
 		return value.NewNumber(parsedNum), nil
 	})
+
+	env.RegisterNative("chars", func(e []expr.Expression, env *value.Env) (value.Value, error) {
+		if len(e) != 1 {
+			return helpers.WrongArgs("chars", 1, len(e))
+		}
+
+		str, err := eval.GetString(e[0], env)
+		if err != nil {
+			return helpers.Err("Error in argument to chars:\n\t%s", err.Error())
+		}
+
+		acc := []value.Value{}
+		for _, b := range str {
+			acc = append(acc, value.NewString(string(b)))
+		}
+
+		return value.NewList(acc), nil
+	})
 }

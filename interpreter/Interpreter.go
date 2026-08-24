@@ -6,9 +6,8 @@ import (
 	"github.com/Moritisimor/gomad/eval"
 	"github.com/Moritisimor/gomad/expr"
 	"github.com/Moritisimor/gomad/internal/helpers"
-	"github.com/Moritisimor/gomad/lexer"
-	"github.com/Moritisimor/gomad/parser"
 	"github.com/Moritisimor/gomad/prelude"
+	"github.com/Moritisimor/gomad/preludesrc"
 	"github.com/Moritisimor/gomad/value"
 )
 
@@ -16,9 +15,23 @@ type Interpreter struct {
 	Env *value.Env
 }
 
-func New() *Interpreter {
+func New() (*Interpreter, error) {
 	env := &value.Env{
 		Parent:   nil,
+		Bindings: map[string]value.Value{},
+	}
+
+	prelude.RegisterCommonPrelude(env)
+	if err := preludesrc.RegisterPreludeSrc(env); err != nil {
+		return nil, err	
+	}
+
+	return &Interpreter{Env: env}, nil
+}
+
+func NewNoSrcPrelude() *Interpreter {
+	env := &value.Env{
+		Parent: nil,
 		Bindings: map[string]value.Value{},
 	}
 
@@ -51,28 +64,7 @@ func (i *Interpreter) RegisterNative(
 }
 
 func (i *Interpreter) DoString(sourceCode string) (value.Value, error) {
-	tokens, err := lexer.Tokenize(sourceCode)
-	if err != nil {
-		return helpers.Err("Error while tokenizing: %s", err)
-	}
-
-	ast, err := parser.Parse(tokens)
-	if err != nil {
-		return helpers.Err("Error while parsing: %s", err)
-	}
-
-	var lastExpr value.Value
-	lastExpr = value.Unit{}
-	for _, exp := range ast {
-		evaluated, err := eval.Eval(exp, i.Env)
-		if err != nil {
-			return helpers.Err("Uncaught error:\n\t%s", err)
-		}
-
-		lastExpr = evaluated
-	}
-
-	return lastExpr, nil
+	return eval.DoString(sourceCode, i.Env)
 }
 
 func (i *Interpreter) DoFile(path string) (value.Value, error) {
@@ -82,26 +74,5 @@ func (i *Interpreter) DoFile(path string) (value.Value, error) {
 	}
 
 	sourceCode := string(content)
-	tokens, err := lexer.Tokenize(sourceCode)
-	if err != nil {
-		return helpers.Err("Error while tokenizing: %s", err)
-	}
-
-	ast, err := parser.Parse(tokens)
-	if err != nil {
-		return helpers.Err("Error while parsing: %s", err)
-	}
-
-	var lastExpr value.Value
-	lastExpr = value.Unit{}
-	for _, exp := range ast {
-		evaluated, err := eval.Eval(exp, i.Env)
-		if err != nil {
-			return helpers.Err("Uncaught error: %s\n", err)
-		}
-
-		lastExpr = evaluated
-	}
-
-	return lastExpr, nil
+	return eval.DoString(sourceCode, i.Env)
 }

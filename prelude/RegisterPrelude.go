@@ -1,3 +1,5 @@
+// prelude is the package containing common functions a programming language might need
+// It includes functions for stuff such as arithmetics, conditionals, variables, defining functions variables etc.
 package prelude
 
 import (

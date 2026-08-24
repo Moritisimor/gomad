@@ -21,7 +21,12 @@ import (
 )
 
 func main() {
-	interp := interpreter.New() // Instantiate new interpreter
+	interp, err := interpreter.New() // Create new interpreter
+	if err != nil {
+		fmt.Printf("Error while creating gomad interpreter: %s\n", err.Error())
+		return
+	}
+
 	interp.RegisterNative("hello", func(
         e []expr.Expression, 
         env *value.Env,
