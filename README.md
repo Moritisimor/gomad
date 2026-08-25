@@ -10,7 +10,7 @@ The difference to nomad is that gomad's API is much more suited for embedding an
 
 Also, be sure to check out [RobertFlexx's](https://github.com/robertflexx) nomad implementation written in rust, [romad](https://github.com/robertflexx/romad).
 
-And if you want a BEAM port of nomad, be sure to check out [bomad](https://github.com/RobertFlexx/bomad)
+And if you want a BEAM port of nomad, be sure to check out **RobertFlexx's** [bomad](https://github.com/RobertFlexx/bomad)
 
 ## Getting started
 Import the repository: 
