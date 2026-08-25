@@ -4,7 +4,7 @@
   <img src="./assets/gomad.svg" alt="gomad logo" width="360">
 </p>
 
-                                              Embeddable Nomad Lisp interpreter written in Go.
+                                        Embeddable Nomad Lisp interpreter written in Go.
 
 ## What is this project about?
 At its core, this is simply an implementation of [nomad](https://github.com/Moritisimor/nomad-lisp).
