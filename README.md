@@ -8,6 +8,8 @@ However, this implementation is more minimal and specifically made for embedding
 
 The difference to nomad is that gomad's API is much more suited for embedding and most of nomad's original I/O capabilities have been stripped from the prelude.
 
+Also, be sure to check out [RobertFlexx's](https://github.com/robertflexx) nomad implementation written in rust, [romad](https://github.com/robertflexx/romad).
+
 ## Getting started
 Import the repository: 
 ```go
