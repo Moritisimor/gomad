@@ -10,8 +10,7 @@
 
 > At its core, this is simply an implementation of [nomad](https://github.com/Moritisimor/nomad-lisp).
 
-## What is this project about?
-At its core, this is simply an implementation of [nomad](https://github.com/Moritisimor/nomad-lisp).
+------------------------------------
 
 However, this implementation is more minimal and specifically made for embedding into go applications.
 
