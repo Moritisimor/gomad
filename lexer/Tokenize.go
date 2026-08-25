@@ -5,22 +5,22 @@ import (
 	"fmt"
 )
 
-func isNumeric(i byte) bool {
+func isNumeric(i rune) bool {
 	return i == '0' || i == '1' || i == '2' ||
 		i == '3' || i == '4' || i == '5' ||
 		i == '6' || i == '7' || i == '8' ||
 		i == '9'
 }
 
-func isWhiteSpace(i byte) bool {
+func isWhiteSpace(i rune) bool {
 	return i == ' ' || i == '\n' || i == '\t'
 }
 
-func isTerminator(i byte) bool {
+func isTerminator(i rune) bool {
 	return isWhiteSpace(i) || i == ')' || i == '('
 }
 
-func skipToNewline(left []byte) []byte {
+func skipToNewline(left []rune) []rune {
 	steps := 0
 	for _, c := range left {
 		if c == '\n' {
@@ -30,12 +30,12 @@ func skipToNewline(left []byte) []byte {
 		steps++
 	}
 
-	return []byte{} // nothing after newline, nothing to return
+	return []rune{} // nothing after newline, nothing to return
 }
 
 func Tokenize(sourceCode string) ([]Token, error) {
 	acc := []Token{}
-	left := []byte(sourceCode)
+	left := []rune(sourceCode)
 
 	for len(left) != 0 {
 		if isWhiteSpace(left[0]) {
@@ -48,19 +48,19 @@ func Tokenize(sourceCode string) ([]Token, error) {
 			continue
 		}
 
-		if bytes.HasPrefix(left, []byte{'t', 'r', 'u', 'e'}) {
+		if len(left) > 5 && bytes.HasPrefix([]byte(string(left)), []byte{'t', 'r', 'u', 'e'}) && isTerminator(left[4]) {
 			acc = append(acc, BOOLLIT{true})
 			left = left[4:]
 			continue
 		}
 
-		if bytes.HasPrefix(left, []byte{'f', 'a', 'l', 's', 'e'}) {
+		if len(left) > 6 && bytes.HasPrefix([]byte(string(left)), []byte{'f', 'a', 'l', 's', 'e'}) && isTerminator(left[5]) {
 			acc = append(acc, BOOLLIT{false})
 			left = left[5:]
 			continue
 		}
 
-		if bytes.HasPrefix(left, []byte{'u', 'n', 'i', 't'}) {
+		if len(left) > 5 && bytes.HasPrefix([]byte(string(left)), []byte{'u', 'n', 'i', 't'}) && isTerminator(left[4]) {
 			acc = append(acc, UNITLIT{})
 			left = left[4:]
 			continue

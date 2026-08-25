@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func parseString(left []byte) (string, []byte, error) {
+func parseString(left []rune) (string, []rune, error) {
 	acc := strings.Builder{}
 	wasFinished := false
 	skipNext := false
@@ -47,11 +47,11 @@ func parseString(left []byte) (string, []byte, error) {
 			continue
 		}
 
-		acc.WriteByte(c)
+		acc.WriteRune(c)
 	}
 
 	if !wasFinished {
-		return "", []byte{}, fmt.Errorf("String literal was never terminated! Got to: \"%s\"", acc.String())
+		return "", []rune{}, fmt.Errorf("String literal was never terminated! Got to: \"%s\"", acc.String())
 	}
 
 	return acc.String(), left[steps:], nil

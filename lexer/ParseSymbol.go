@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func parseSymbol(left []byte) (string, []byte, error) {
+func parseSymbol(left []rune) (string, []rune, error) {
 	acc := strings.Builder{}
 	wasEnded := false
 	steps := 0
@@ -16,12 +16,12 @@ func parseSymbol(left []byte) (string, []byte, error) {
 			break
 		}
 
-		acc.WriteByte(c)
+		acc.WriteRune(c)
 		steps++
 	}
 
 	if !wasEnded {
-		return "", []byte{}, fmt.Errorf("Symbol was never terminated! Got to \"%s\"", acc.String())
+		return "", []rune{}, fmt.Errorf("Symbol was never terminated! Got to \"%s\"", acc.String())
 	}
 
 	return acc.String(), left[steps:], nil

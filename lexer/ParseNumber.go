@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func parseNumber(left []byte) (float64, []byte, error) {
+func parseNumber(left []rune) (float64, []rune, error) {
 	acc := strings.Builder{}
 	wasFinished := false
 	steps := 0
@@ -17,17 +17,17 @@ func parseNumber(left []byte) (float64, []byte, error) {
 			break
 		}
 
-		acc.WriteByte(c)
+		acc.WriteRune(c)
 		steps++
 	}
 
 	num, err := strconv.ParseFloat(acc.String(), 64)
 	if err != nil {
-		return 0, []byte{}, fmt.Errorf("Error while parsing number literal: %s", err.Error())
+		return 0, []rune{}, fmt.Errorf("Error while parsing number literal: %s", err.Error())
 	}
 
 	if !wasFinished {
-		return 0, []byte{}, fmt.Errorf("Number literal was never terminated! Got to: \"%s\"", acc.String())
+		return 0, []rune{}, fmt.Errorf("Number literal was never terminated! Got to: \"%s\"", acc.String())
 	}
 
 	return num, left[steps:], nil
