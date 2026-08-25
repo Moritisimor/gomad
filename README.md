@@ -1,7 +1,7 @@
 # gomad
 
-<p align="center">
-  <img src="./assets/gomad.svg" alt="gomad logo" width="520">
+<p align="left">
+  <img src="./assets/gomad.svg" alt="gomad logo" width="360">
 </p>
 
 Embeddable Nomad Lisp interpreter written in Go.
