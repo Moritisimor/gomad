@@ -8,7 +8,21 @@ However, this implementation is more minimal and specifically made for embedding
 
 The difference to nomad is that gomad's API is much more suited for embedding and most of nomad's original I/O capabilities have been stripped from the prelude.
 
+## Getting started
+Import the repository: 
+```go
+import "github.com/Moritisimor/gomad"
+```
+
+Then update your dependencies:
+```bash
+go mod tidy
+```
+
+And now you can use the `gomad` package within your project!
+
 ## Examples
+### Instantiating the interpreter, registering natives and calling them through gomad
 ```go
 package main
 
@@ -37,5 +51,43 @@ func main() {
 	} else {
 		fmt.Printf("Evaluates to: %s\n", evaluated.String())
 	}
+}
+```
+
+### A simple logging function
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/Moritisimor/gomad/expr"
+	"github.com/Moritisimor/gomad/interpreter"
+	"github.com/Moritisimor/gomad/value"
+	"github.com/Moritisimor/gomad/eval"
+)
+
+func main() {
+	interp := interpreter.New() // Create new interpreter
+	interp.RegisterNative("log", func(
+        e []expr.Expression, 
+        env *value.Env,
+    ) (value.Value, error) {
+		if len(e) != 1 { // Check argument length
+			return value.NewUnit(), fmt.Errorf("Error in call to log: Expected one argument, got %d", len(e))
+		}
+
+		// We expect a string as the argument, anything else is an error.
+		logString, err := eval.GetString(e[0], env)
+		if err != nil {
+			return value.NewUnit(), fmt.Errorf("Error in call to log: %s", err.Error())
+		}
+
+		log.Println(logString)
+		return value.NewUnit(), nil
+	})
+
+	interp.DoString("(log \"Gomad interpreter running!\")")
 }
 ```
