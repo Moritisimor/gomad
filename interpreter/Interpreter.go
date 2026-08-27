@@ -1,6 +1,10 @@
+// interpreter package is the user-facing API.
+// The interpreter struct type encapsulates an environment
+// as well as methods for defining native functions and calling them.
 package interpreter
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/Moritisimor/gomad/eval"
@@ -14,6 +18,7 @@ type Interpreter struct {
 	Env *value.Env
 }
 
+// Creates a new interpreter
 func New(args ...string) *Interpreter {
 	env := value.RootEnv()
 
@@ -33,10 +38,11 @@ func New(args ...string) *Interpreter {
 	return &Interpreter{Env: env}
 }
 
+// NewNoStdlib creates a new interpreter that's missing the common prelude
+// This interpreter is missing EVERYTHING, even common stuff such as if, let, letfun etc.
+// This is mainly meant to be used for making your own DSLs for stuff such as configs.
 func NewNoStdlib(args ...string) *Interpreter {
 	env := value.RootEnv()
-	eval.RegisterNatives(env)
-	eval.RegisterOSNatives(env)
 	argVals := make([]value.Value, len(args))
 	for i, a := range args {
 		argVals[i] = value.String{Val: a}
@@ -45,24 +51,32 @@ func NewNoStdlib(args ...string) *Interpreter {
 	return &Interpreter{Env: env}
 }
 
+// NewNoSrcPrelude creates a new interpreter that's missing the part of 
+// the prelude which is written in gomad itself.
 func NewNoSrcPrelude(args ...string) *Interpreter { return NewNoStdlib(args...) }
 
 func (i *Interpreter) RegisterNative(name string, fn value.NativeFunc) error {
 	return i.Env.Set(name, fn)
 }
 
+// DoString tokenizes, parses and evaluates a string, returning the last
+// evaluated expression or an error if one was encountered.
 func (i *Interpreter) DoString(source string) (value.Value, error) {
 	return eval.DoString(source, i.Env)
 }
 
+// DoFile reads a file and parses, tokenizes and evaluates its content as a string.
+// The last evaluated expression is returned or an error if one was encountered
 func (i *Interpreter) DoFile(path string) (value.Value, error) {
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, &value.Error{Kind: value.ErrIo, Msg: path + ": " + err.Error()}
 	}
+
 	return eval.DoString(string(content), i.Env)
 }
 
+// EvalExpr evaluates a raw expression/AST
 func (i *Interpreter) EvalExpr(e expr.Expr) (value.Value, error) {
 	return eval.Eval(e, i.Env)
 }
@@ -75,6 +89,7 @@ func Parse(source string) ([]expr.Expr, error) {
 	return parser.ParseProgram(tokens)
 }
 
+// GetGlobal returns a global binding
 func (i *Interpreter) GetGlobal(name string) (value.Value, error) {
 	return i.Env.Get(name)
 }
@@ -82,3 +97,9 @@ func (i *Interpreter) GetGlobal(name string) (value.Value, error) {
 func (i *Interpreter) GetBinding(name string) (value.Value, error) { return i.GetGlobal(name) }
 func (i *Interpreter) Set(name string, val value.Value)            { i.Env.Define(name, val) }
 func (i *Interpreter) Unset(name string)                           { delete(i.Env.Bindings, name) }
+
+func (i *Interpreter) PrintGlobals() {
+	for k, v := range i.Env.Bindings {
+		fmt.Printf("%s: %s\n", k, v)
+	}
+}
