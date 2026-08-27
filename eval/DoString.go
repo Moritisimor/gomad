@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"github.com/Moritisimor/gomad/internal/helpers"
 	"github.com/Moritisimor/gomad/lexer"
 	"github.com/Moritisimor/gomad/parser"
 	"github.com/Moritisimor/gomad/value"
@@ -10,24 +9,17 @@ import (
 func DoString(sourceCode string, env *value.Env) (value.Value, error) {
 	tokens, err := lexer.Tokenize(sourceCode)
 	if err != nil {
-		return helpers.Err("Error while tokenizing: %s", err.Error())
+		return nil, &value.Error{Kind: value.ErrTokenize, Msg: err.Error()}
 	}
 
-	ast, err := parser.Parse(tokens)
+	ast, err := parser.ParseProgram(tokens)
 	if err != nil {
-		return helpers.Err("Error while parsing: %s", err.Error())
+		return nil, &value.Error{Kind: value.ErrParse, Msg: err.Error()}
 	}
 
-	var lastExpr value.Value
-	lastExpr = value.NewUnit()
-	for _, node := range ast {
-		evaluated, err := Eval(node, env)
-		if err != nil {
-			return helpers.Err("Uncaught Error:\n\t%s", err.Error())
-		}
+	return EvalSeq(ast, env)
+}
 
-		lastExpr = evaluated
-	}
-
-	return lastExpr, nil
+func DoStringSeq(sourceCode string, env *value.Env) (value.Value, error) {
+	return DoString(sourceCode, env)
 }

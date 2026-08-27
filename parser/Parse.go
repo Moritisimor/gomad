@@ -1,69 +1,102 @@
 package parser
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/Moritisimor/gomad/expr"
 	"github.com/Moritisimor/gomad/lexer"
 )
 
-// Parser is a struct that keeps track of the parser's current state, mainly the current token index.
-// It's not really meant to be instantiated on its own, just let the Parse function do it for you.
 type Parser struct {
-	Tokens []lexer.Token
-	Cursor int
+	tokens []lexer.Token
+	pos    int
 }
 
-func (p *Parser) parse() ([]expr.Expression, error) {
-	acc := []expr.Expression{}
+func NewParser(tokens []lexer.Token) *Parser {
+	return &Parser{tokens: tokens, pos: 0}
+}
 
-	for p.Cursor < len(p.Tokens) {
-		t := p.Tokens[p.Cursor]
+func (p *Parser) peek() *lexer.Token {
+	if p.pos >= len(p.tokens) {
+		return nil
+	}
+	return &p.tokens[p.pos]
+}
 
-		switch tok := t.(type) {
-		case lexer.NUMLIT:
-			acc = append(acc, expr.Number{Val: tok.Val})
-			p.Cursor++
+func (p *Parser) advance() *lexer.Token {
+	if p.pos >= len(p.tokens) {
+		return nil
+	}
+	t := &p.tokens[p.pos]
+	p.pos++
+	return t
+}
 
-		case lexer.STRINGLIT:
-			acc = append(acc, expr.String{Val: tok.Val})
-			p.Cursor++
+func (p *Parser) parseExpr() (expr.Expr, error) {
+	tok := p.advance()
+	if tok == nil {
+		return nil, errors.New("unexpected EOF")
+	}
 
-		case lexer.BOOLLIT:
-			acc = append(acc, expr.Boolean{Val: tok.Val})
-			p.Cursor++
+	switch tok.Type {
+	case lexer.TokenNumLit:
+		return expr.NumLit{Val: tok.Float}, nil
+	case lexer.TokenBoolLit:
+		return expr.BoolLit{Val: tok.Bool}, nil
+	case lexer.TokenStringLit:
+		return expr.StringLit{Val: tok.Val}, nil
+	case lexer.TokenUnitLit:
+		return expr.UnitLit{}, nil
+	case lexer.TokenSymbol:
+		return expr.Symbol{Val: tok.Val}, nil
+	case lexer.TokenLParen:
+		return p.parseList()
+	case lexer.TokenRParen:
+		return nil, errors.New("unexpected ')'")
+	case lexer.TokenEOF:
+		return nil, errors.New("unexpected EOF")
+	}
+	return nil, fmt.Errorf("unexpected token: %s", tok)
+}
 
-		case lexer.UNITLIT:
-			acc = append(acc, expr.Unit{})
-			p.Cursor++
-
-		case lexer.SYMBOL:
-			acc = append(acc, expr.Symbol{Val: tok.Val})
-			p.Cursor++
-
-		case lexer.LPAREN:
-			p.Cursor++
-			exprs, err := p.parse()
-			if err != nil {
-				return acc, err
-			}
-
-			acc = append(acc, expr.List{Val: exprs})
-
-		case lexer.RPAREN:
-			p.Cursor++
-			return acc, nil
+func (p *Parser) parseList() (expr.Expr, error) {
+	var items []expr.Expr
+	for {
+		tok := p.peek()
+		if tok == nil || tok.Type == lexer.TokenEOF {
+			return nil, errors.New("unexpected EOF in list")
 		}
+		if tok.Type == lexer.TokenRParen {
+			p.advance()
+			return expr.List{Val: items}, nil
+		}
+		e, err := p.parseExpr()
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, e)
 	}
-
-	return acc, nil
 }
 
-// Parse is the user-facing parsing function.
-// It takes a slice of tokens and transforms them into a slice of expressions.
-func Parse(tokens []lexer.Token) ([]expr.Expression, error) {
-	parser := Parser{
-		Tokens: tokens,
-		Cursor: 0,
+func ParseProgram(tokens []lexer.Token) ([]expr.Expr, error) {
+	p := NewParser(tokens)
+	var forms []expr.Expr
+	for {
+		tok := p.peek()
+		if tok == nil || tok.Type == lexer.TokenEOF {
+			break
+		}
+		e, err := p.parseExpr()
+		if err != nil {
+			return nil, err
+		}
+		forms = append(forms, e)
 	}
+	return forms, nil
+}
 
-	return parser.parse()
+func ParseOne(tokens []lexer.Token) (expr.Expr, error) {
+	p := NewParser(tokens)
+	return p.parseExpr()
 }

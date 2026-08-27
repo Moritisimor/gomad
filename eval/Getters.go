@@ -1,107 +1,68 @@
 package eval
 
 import (
-	"fmt"
-
 	"github.com/Moritisimor/gomad/expr"
-	"github.com/Moritisimor/gomad/internal/helpers"
 	"github.com/Moritisimor/gomad/value"
 )
 
-func GetString(e expr.Expression, env *value.Env) (string, error) {
-	evaluated, err := Eval(e, env)
+func GetString(e expr.Expr, env *value.Env) (string, error) {
+	v, err := Eval(e, env)
 	if err != nil {
 		return "", err
 	}
-
-	if s, ok := evaluated.(value.String); ok {
+	if s, ok := v.(value.String); ok {
 		return s.Val, nil
 	}
-
-	return helpers.BadType[string]("string", e)
+	return "", typeErr("string", e, v)
 }
 
-func GetNumber(e expr.Expression, env *value.Env) (float64, error) {
-	evaluated, err := Eval(e, env)
+func GetNumber(e expr.Expr, env *value.Env) (float64, error) {
+	v, err := Eval(e, env)
 	if err != nil {
 		return 0, err
 	}
-
-	if f, ok := evaluated.(value.Number); ok {
-		return f.Val, nil
+	if n, ok := v.(value.Number); ok {
+		return n.Val, nil
 	}
-
-	return helpers.BadType[float64]("number", e)
+	return 0, typeErr("number", e, v)
 }
 
-func GetBoolean(e expr.Expression, env *value.Env) (bool, error) {
-	evaluated, err := Eval(e, env)
+func GetBool(e expr.Expr, env *value.Env) (bool, error) {
+	v, err := Eval(e, env)
 	if err != nil {
 		return false, err
 	}
-
-	if b, ok := evaluated.(value.Boolean); ok {
+	if b, ok := v.(value.Boolean); ok {
 		return b.Val, nil
 	}
-
-	return helpers.BadType[bool]("boolean", e)
+	return false, typeErr("bool", e, v)
 }
 
-func GetList(e expr.Expression, env *value.Env) ([]value.Value, error) {
-	evaluated, err := Eval(e, env)
+func GetList(e expr.Expr, env *value.Env) (value.List, error) {
+	v, err := Eval(e, env)
 	if err != nil {
-		return []value.Value{}, err
+		return value.NewNil(), err
 	}
-
-	if b, ok := evaluated.(value.List); ok {
-		return b.Val, nil
+	if l, ok := v.(value.List); ok {
+		return l, nil
 	}
-
-	return helpers.BadType[[]value.Value]("list", e)
+	return value.NewNil(), typeErr("list", e, v)
 }
 
-func GetRecord(e expr.Expression, env *value.Env) (map[string]value.Value, error) {
-	evaluated, err := Eval(e, env)
+func GetRecord(e expr.Expr, env *value.Env) (*value.Record, error) {
+	v, err := Eval(e, env)
 	if err != nil {
-		return map[string]value.Value{}, err
+		return nil, err
 	}
-
-	if r, ok := evaluated.(value.Record); ok {
-		return r.Val, nil
+	if r, ok := v.(*value.Record); ok {
+		return r, nil
 	}
-
-	return helpers.BadType[map[string]value.Value]("record", e)
+	return nil, typeErr("record", e, v)
 }
 
-func GetLambda(e expr.Expression, env *value.Env) (value.Lambda, error) {
-	evaluated, err := Eval(e, env)
-	if err != nil {
-		return value.Lambda{}, nil
-	}
-
-	if b, ok := evaluated.(value.Lambda); ok {
-		return b, nil
-	}
-
-	return helpers.BadType[value.Lambda]("lambda", e)
-}
-
-func GetNative(
-	e expr.Expression,
-	env *value.Env,
-) (func(e []expr.Expression, env *value.Env) (value.Value, error), error) {
-	fun := func(e []expr.Expression, env *value.Env) (value.Value, error) {
-		return value.Unit{}, fmt.Errorf("You're not supposed to invoke me!")
-	}
-
-	evaluated, err := Eval(e, env)
-	if err != nil {
-		return fun, err
-	}
-
-	if n, ok := evaluated.(value.NativeFunction); ok {
-		return n.Callback, nil
-	}
-
-	return fun, err
+func typeErr(expected string, e expr.Expr, v value.Value) *value.Error {
+	return value.EvalErrf(
+		"This expression was expected to evaluate to a %s, but it didn't: %s (%s)",
+		expected, e, v,
+	)
 }
