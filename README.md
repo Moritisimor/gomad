@@ -175,6 +175,7 @@ Go process. The command-line program is the layer that turns those signals
 into actual process exit codes.
 
 ## How does it compare to romad?
+**in a non hostile way to romad.**
 
 Gomad and romad understand the same language and provide nearly the same
 runtime features. Scripts using the standard library, records, macros, tail
