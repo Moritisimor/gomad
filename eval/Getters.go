@@ -60,6 +60,17 @@ func GetRecord(e expr.Expr, env *value.Env) (*value.Record, error) {
 	return nil, typeErr("record", e, v)
 }
 
+func GetLambda(e expr.Expr, env *value.Env) (value.Lambda, error) {
+	v, err := Eval(e, env)
+	if err != nil {
+		return value.Lambda{}, err
+	}
+	if l, ok := v.(value.Lambda); ok {
+		return l, nil
+	}
+	return value.Lambda{}, typeErr("lambda", e, v)
+}
+
 func typeErr(expected string, e expr.Expr, v value.Value) *value.Error {
 	return value.EvalErrf(
 		"This expression was expected to evaluate to a %s, but it didn't: %s (%s)",
