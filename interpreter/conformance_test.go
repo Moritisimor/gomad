@@ -97,13 +97,13 @@ func TestNumberSpecialValues(t *testing.T) {
 }
 
 func BenchmarkInterpreterStartup(b *testing.B) {
-	for range b.N {
+	for b.Loop() {
 		_ = interpreter.New()
 	}
 }
 
 func BenchmarkTailRecursion100k(b *testing.B) {
-	for range b.N {
+	for b.Loop() {
 		i := interpreter.New()
 		if _, err := i.DoString("(let loop (lambda (n acc) (if (= n 0) acc (loop (- n 1) (+ acc 1))))) (loop 100000 0)"); err != nil {
 			b.Fatal(err)
@@ -112,7 +112,7 @@ func BenchmarkTailRecursion100k(b *testing.B) {
 }
 
 func BenchmarkMap1000(b *testing.B) {
-	for range b.N {
+	for b.Loop() {
 		i := interpreter.New()
 		if _, err := i.DoString("(map (lambda (x) (+ x 1)) (list_init 1000 (lambda (x) x)))"); err != nil {
 			b.Fatal(err)
