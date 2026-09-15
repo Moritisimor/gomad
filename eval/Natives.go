@@ -47,6 +47,32 @@ func coreNatives() []nativeReg {
 			return nil, value.EvalErrf("Cannot throw non-string: %s", v)
 		}),
 
+		reg("try_with", func(args []expr.Expr, env *value.Env) (value.Value, error) {
+			if len(args) != 2 {
+				return nil, arityErr("try_with", 2, len(args))
+			}
+
+			tryExpr := args[0]
+			handler := args[1]
+			
+			evaluated, err := Eval(tryExpr, env)
+			if err != nil {
+				lambda, lambdaErr := GetLambda(handler, env)
+				if lambdaErr != nil {
+					return nil, value.EvalErr("try_with expects a lambda as its handler")
+				}
+
+				handlerValue, err := InvokeLambda(lambda, value.NewString(err.Error()))
+				if err != nil {
+					return nil, value.EvalErr(fmt.Sprintf("Error in try_with handler: %s", err.Error()))
+				}
+
+				return handlerValue, nil
+			}
+
+			return evaluated, nil
+		}),
+
 		reg("letmac", func(args []expr.Expr, env *value.Env) (value.Value, error) {
 			if len(args) < 3 {
 				return nil, arityErr("letmac", 3, len(args))
